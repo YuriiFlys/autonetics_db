@@ -1,0 +1,77 @@
+CREATE TABLE Supermarkets (
+    supermarket_id SERIAL PRIMARY KEY,
+    name VARCHAR(100),
+    email VARCHAR(100) UNIQUE
+);
+
+
+CREATE TABLE Subscriptions (
+    subscription_id SERIAL PRIMARY KEY,
+    subscription_name VARCHAR(100),
+    price DECIMAL(10, 2)
+);
+
+
+CREATE TABLE SupermarketDetails (
+    supermarket_id INT PRIMARY KEY REFERENCES Supermarkets(supermarket_id) ON DELETE CASCADE,
+    founded_date DATE,
+    ceo_name VARCHAR(100)
+);
+
+CREATE TABLE Invoices (
+    invoice_id SERIAL PRIMARY KEY,
+    supermarket_id INT REFERENCES Supermarkets(supermarket_id) ON DELETE CASCADE,
+    invoice_date DATE DEFAULT CURRENT_DATE
+);
+
+CREATE TABLE InvoiceDetails (
+    invoice_detail_id SERIAL PRIMARY KEY,
+    invoice_id INT REFERENCES  Invoices(invoice_id) ON DELETE CASCADE,
+    subscription_id INT REFERENCES Subscriptions(subscription_id),
+    quantity INT
+);
+
+
+CREATE TABLE Offices (
+    office_id SERIAL PRIMARY KEY,
+    supermarket_id INT REFERENCES Supermarkets(supermarket_id) ON DELETE CASCADE,
+    address VARCHAR(255),
+    city VARCHAR(100),
+    country VARCHAR(100)
+);
+
+
+INSERT INTO Supermarkets (name, email) VALUES
+('Сільпо', 'silpo@company.com'),
+('АТБ', 'atb@company.com'),
+('Близенько', 'blyzenko@company.com');
+
+
+INSERT INTO Subscriptions (subscription_name, price) VALUES
+('Базова підписка', 299.99),
+('Стандартна підписка', 499.99),
+('Преміум підписка', 799.99);
+
+
+INSERT INTO SupermarketDetails (supermarket_id, founded_date, ceo_name) VALUES
+(1, '1997-01-01', 'Володимир Костельман'),
+(2, '2000-03-15', 'Геннадій Буткевич'),
+(3, '2010-07-21', 'Олександр Бережанський');
+
+INSERT INTO Invoices (supermarket_id) VALUES
+(1),
+(2),
+(3);
+
+INSERT INTO InvoiceDetails (invoice_id, subscription_id, quantity) VALUES
+(1, 1, 10),  
+(2, 2, 5),   
+(3, 3, 2);
+
+
+INSERT INTO Offices (supermarket_id, address, city, country) VALUES
+(1, 'вул. Бульварно-Кудрявська 15', 'Київ', 'Україна'),
+(2, 'вул. Набережна 12', 'Дніпро', 'Україна'),
+(3, 'вул. Зелена 89', 'Львів', 'Україна');
+
+
